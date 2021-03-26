@@ -6,6 +6,10 @@ const { validUser } = require('../middleware/other');
 
 router.post('/register', validUser, (req, res) => {
   const credentials = req.body;
+
+  var salt = bcryptjs.genSaltSync(8);
+  var hash = bcryptjs.hashSync(credentials.password, salt);
+
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.

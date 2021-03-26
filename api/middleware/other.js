@@ -2,6 +2,11 @@ module.exports = {
     validUser,
 }
 
-function validUser(user) {
-  return Boolean(user.username && user.password)
+function validUser(req, res, next) {
+  const user = req.body;
+  if (user.username && user.password) {
+    next();
+  } else {
+    res.status(412).json({ message: 'valid username and password required' });
+  }
 }
