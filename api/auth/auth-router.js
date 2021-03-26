@@ -101,13 +101,13 @@ function buildToken(user) {
   const payload = {
     username: user.username,
     password: user.password,
-  }
+  };
   const config = {
     expiresIn: '1d',
-  }
+  };
   return jwt.sign(
     payload, jwtSecret, config
-  )
+  );
 }
 
 module.exports = router;

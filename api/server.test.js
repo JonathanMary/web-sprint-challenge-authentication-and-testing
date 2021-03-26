@@ -10,7 +10,6 @@ beforeAll(async () => {
 })
 beforeEach(async () => {
   await db('users').truncate();
-  //await db.seed.run();
 })
 afterAll(async () => {
   await db.destroy();
@@ -85,6 +84,15 @@ describe('API endpoints', () => {
     })
   })
   describe('[GET] /api/jokes', () => {
-    
+    it('restricts access if no token', async () => {
+      const res = await request(server).get('/api/jokes');
+      expect(res.body.message).toEqual('token required');
+    })
+    it('restricts access to user with invalid token', async () => {
+      const res = await request(server)
+        .get('/api/jokes')
+        .set('Authorization', 'thatsafaketoken');
+      expect(res.body.message).toEqual('token invalid');
+    })
   })
 })
