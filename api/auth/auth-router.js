@@ -2,13 +2,23 @@ const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const router = require('express').Router();
 
-const { validUser } = require('../middleware/other');
+const { validUser, isAvailable } = require('../middleware/other');
+const Users = require('./users-model');
 
-router.post('/register', validUser, (req, res) => {
+router.post('/register', validUser, isAvailable, (req, res, next) => {
   const credentials = req.body;
 
   var salt = bcryptjs.genSaltSync(8);
   var hash = bcryptjs.hashSync(credentials.password, salt);
+
+  credentials.password = hash;
+  credentials.username = credentials.username.trim();
+
+  Users.insert(credentials)
+       .then(user => {
+         res.status(200).json(user)
+       })
+       .catch(next)
 
   /*
     IMPLEMENT
@@ -63,5 +73,13 @@ router.post('/login', (req, res) => {
       the response body should include a string exactly as follows: "invalid credentials".
   */
 });
+
+router.use((err, req, res, next) => {
+  res.status(500).json({
+    message: err.message,
+    stack: err.stack,
+    custom: 'Error in auth-router.js',
+  })
+})
 
 module.exports = router;
