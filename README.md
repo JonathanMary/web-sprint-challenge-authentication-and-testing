@@ -64,18 +64,30 @@ These goals may or may not be things you have learned in this module but they bu
 
 ## Submission format
 
-- [ ] Submit via Codegrade by committing and pushing any new changes.
-- [ ] Create a pull request to merge `<firstName-lastName>` branch into `main`.
-- [ ] Please don't merge your own pull request and make sure **you are on your own repo**.
-- [ ] Check Codegrade for automated feedback.
+- [x] Submit via Codegrade by committing and pushing any new changes.
+- [x] Create a pull request to merge `<firstName-lastName>` branch into `main`.
+- [x] Please don't merge your own pull request and make sure **you are on your own repo**.
+- [x] Check Codegrade for automated feedback.
 - [ ] Check Codegrade on Monday following the Sprint Challenge for reviewer feedback.
-- [ ] Any changes pushed after the deadline will not receive any feedback.
+- [x] Any changes pushed after the deadline will not receive any feedback.
 
 ## Interview Questions
 
 Be prepared to demonstrate your understanding of this week's concepts by answering questions on the following topics.
 
 1. Differences between using _sessions_ or _JSON Web Tokens_ for authentication.
+  With sessions, we send a cookie to the user, and the authentication is handled on the server.
+  With JWT, we send a token, store in localStorage, the authentication is handled on the client.
+
 2. What does `bcryptjs` do to help us store passwords in a secure manner?
+  bcryptsjs hash passwords, it's a one way encryption, so if the database leaks, attacker will know the hash, and not the useful password.
+
 3. How are unit tests different from integration and end-to-end testing?
+  Unit tests are isolating small chunks of code.
+  While the others are more generalist.
+  The unit test will give more details on errors.
+
 4. How does _Test Driven Development_ change the way we write applications and tests?
+  It forces developers to think ahead, by planning and writing what they expect out of the code before implementing.
+  By doing so, the the code will have to fit into the desired comportment of the app/software.
+  

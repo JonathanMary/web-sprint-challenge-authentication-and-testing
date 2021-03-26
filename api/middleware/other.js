@@ -17,7 +17,7 @@ function validUser(req, res, next) {
 async function isAvailable(req, res, next) {
   Users.getBy({ username: req.body.username })
        .then(result => {
-         if(result.length === 0) {
+         if (result.length === 0) {
            next();
          } else {
            res.status(500).json({ message: 'username taken' });
