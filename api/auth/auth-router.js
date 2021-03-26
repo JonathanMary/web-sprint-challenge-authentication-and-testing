@@ -2,6 +2,7 @@ const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const router = require('express').Router();
 
+const { jwtSecret } = require('../../config/secrets');
 const { validUser, isAvailable } = require('../middleware/other');
 const Users = require('./users-model');
 
@@ -47,8 +48,22 @@ router.post('/register', validUser, isAvailable, (req, res, next) => {
   */
 });
 
-router.post('/login', (req, res) => {
-  res.end('implement login, please!');
+router.post('/login', validUser, (req, res, next) => {
+  const { username, password } = req.body;
+
+  Users.getBy({ username: username })
+       .then(([user]) => {
+         if (user && bcryptjs.compareSync(password, user.password)) {
+           const token = buildToken(user)
+           res.status(200).json({
+             message: `welcome, ${user.username}`,
+             token
+           });
+         } else {
+          res.status(500).json({ message: 'invalid credentials' });
+         }
+       })
+       .catch(next)
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -81,5 +96,18 @@ router.use((err, req, res, next) => {
     custom: 'Error in auth-router.js',
   })
 })
+
+function buildToken(user) {
+  const payload = {
+    username: user.username,
+    password: user.password,
+  }
+  const config = {
+    expiresIn: '1d',
+  }
+  return jwt.sign(
+    payload, jwtSecret, config
+  )
+}
 
 module.exports = router;

@@ -56,13 +56,33 @@ describe('API endpoints', () => {
       expect(await db('users')).toHaveLength(1);
     })
     it('returns newly created user', async () => {
-      const captain = await request(server).post('/api/auth/register').send(user);
-      expect(captain.body.id).toEqual(1);
-      expect(captain.body.username).toEqual('Captain Marvel');
+      const res = await request(server)
+        .post('/api/auth/register')
+        .send(user);
+      expect(res.body.id).toEqual(1);
+      expect(res.body.username).toEqual('Captain Marvel');
     })
   })
   describe('[POST] /api/auth/login', () => {
-    
+    it('returns a message and token', async () => {
+      await request(server).post('/api/auth/register').send(user);
+      const res = await request(server)
+        .post('/api/auth/login')
+        .send(user);
+      expect(res.body.message).toBe('welcome, Captain Marvel');
+      expect(res.body).toHaveProperty('token');
+    })
+    it('verifies password', async () => {
+      await request(server).post('/api/auth/register').send(user);
+      const fakeCaptain = {
+        username: 'Captain Marvel',
+        password: '1234',
+      }
+      const res = await request(server)
+        .post('/api/auth/login')
+        .send(fakeCaptain);
+      expect(res.body).toEqual({ message: 'invalid credentials' });
+    })
   })
   describe('[GET] /api/jokes', () => {
     
